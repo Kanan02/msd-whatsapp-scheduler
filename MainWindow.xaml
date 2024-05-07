@@ -6,9 +6,10 @@
         xmlns:local="clr-namespace:msd_whatsapp_scheduler"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
-        Title="WhatsApp Message Scheduler" Height="600" Width="800">
+        Title="WhatsApp Message Scheduler" Height="800" Width="1000">
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -21,28 +22,31 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <!-- Channel Name  -->
+        <Label Content="Channel Name:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox x:Name="channelName" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" TextWrapping="Wrap" VerticalAlignment="Top"/>
 
         <!-- YouTube URL -->
-        <Label Content="YouTube URL:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtYouTubeURL" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Label Content="YouTube URL:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtYouTubeURL" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" TextWrapping="Wrap" VerticalAlignment="Top"/>
 
         <!-- RBT Code -->
-        <Label Content="RBT Code:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-        <TextBox x:Name="txtRBTCode" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        <Label Content="RBT Code:" Grid.Row="2" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox x:Name="txtRBTCode" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" TextWrapping="Wrap" VerticalAlignment="Top"/>
 
         <!-- DateTime Picker -->
-        <Label Content="Schedule Time:" Grid.Row="2" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-        <xctk:DateTimePicker x:Name="dateTimePicker" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" VerticalAlignment="Top"/>
+        <Label Content="Schedule Time:" Grid.Row="3" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <xctk:DateTimePicker x:Name="dateTimePicker" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" VerticalAlignment="Top"/>
 
         <!-- Message Preview and Edit -->
-        <Label Content="Preview/Edit Message:" Grid.Row="3" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtPreview" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" TextWrapping="Wrap" VerticalAlignment="Top" Height="200" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+        <Label Content="Preview/Edit Message:" Grid.Row="4" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtPreview" Grid.Row="4" Grid.Column="1" Margin="0,0,0,10" TextWrapping="Wrap" VerticalAlignment="Top" Height="200" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
 
         <!-- Schedule Button -->
-        <Button x:Name="btnSchedule" Content="Schedule" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Width="75" Margin="0,10,0,10" Click="btnSchedule_Click"/>
+        <Button x:Name="btnSchedule" Content="Schedule" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Width="75" Margin="0,10,0,10" Click="btnSchedule_Click"/>
         <!-- Scheduled Messages List -->
-        <Label Content="Scheduled Messages:" Grid.Row="5" Grid.Column="0" VerticalAlignment="Top"/>
-        <ListView x:Name="lvScheduledMessages" Grid.Row="5" Grid.Column="1" Margin="0,10" ItemsSource="{Binding ScheduledMessages}">
+        <Label Content="Scheduled Messages:" Grid.Row="6" Grid.Column="0" VerticalAlignment="Top"/>
+        <ListView x:Name="lvScheduledMessages" Grid.Row="6" Grid.Column="1" Margin="0,10" ItemsSource="{Binding ScheduledMessages}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Contact Name" DisplayMemberBinding="{Binding ContactName}" Width="Auto"/>

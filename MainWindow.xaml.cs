@@ -22,7 +22,7 @@ namespace msd_whatsapp_scheduler
     {
         public ObservableCollection<ScheduledMessage> ScheduledMessages { get; set; } = new ObservableCollection<ScheduledMessage>();
         private IWebDriver driver;
-        private string defaultContactName = "Parviz Rahimli";
+        private string defaultContactName = "TestChannel";
         private string cookieFilePath = "whatsappCookies.txt";
 
         public MainWindow()
@@ -38,7 +38,7 @@ namespace msd_whatsapp_scheduler
         {
             driver = new ChromeDriver();
             driver.Navigate().GoToUrl("https://web.whatsapp.com");
-
+            channelName.Text = "TestChannel";
             if (File.Exists(cookieFilePath))
             {
                 try
@@ -65,7 +65,7 @@ namespace msd_whatsapp_scheduler
             // Constructing the message
             string youtubeUrl = txtYouTubeURL.Text;
             string rbtCode = txtRBTCode.Text;
-            txtPreview.Text = $"Check out this video! {youtubeUrl}\nUse this RBT code: {rbtCode}";
+            txtPreview.Text = $"Check out this video! {youtubeUrl} Use this RBT code: {rbtCode}";
         }
 
         private void btnSchedule_Click(object sender, RoutedEventArgs e)
@@ -74,7 +74,7 @@ namespace msd_whatsapp_scheduler
             string message = txtPreview.Text; // Use the edited message from the preview box
 
             // Adding the message to the schedule list
-            ScheduledMessages.Add(new ScheduledMessage { ContactName = defaultContactName, Message = message, ScheduleDateTime = scheduleDateTime });
+            ScheduledMessages.Add(new ScheduledMessage { ContactName = channelName.Text, Message = message, ScheduleDateTime = scheduleDateTime });
             Task.Run(() => CheckForScheduledMessages());
             MessageBox.Show($"Message was scheduled on {scheduleDateTime}!","Success",MessageBoxButton.OK,MessageBoxImage.Information );
         }
@@ -87,7 +87,7 @@ namespace msd_whatsapp_scheduler
                 {
                     if (DateTime.Now >= msg.ScheduleDateTime)
                     {
-                        SendMessage(msg.ContactName, msg.Message);
+                        SendMessageToChannel(msg.ContactName, msg.Message);
                         ScheduledMessages.Remove(msg);
                     }
                 }
@@ -145,7 +145,10 @@ namespace msd_whatsapp_scheduler
 
                 try
                 {
+                    //searchBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[@title='" + contactName + "']")));
                     searchBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//span[@title='" + contactName + "']")));
+                        //*[@id="app"]/div/div[2]/div[2]/div[1]/span/div/span/div/div/div/div[1]/div/div/div[2]/div[2]/div/div[1]/p
+                        //*[@id="app"]/div/div[2]/div[2]/div[1]/span/div/span/div/div/div/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[2]/span
                 }
                 catch
                 {
@@ -172,5 +175,36 @@ namespace msd_whatsapp_scheduler
                 Console.WriteLine($"An error occurred: {e.Message}");
             }
         }
+        private void SendMessageToChannel(string channelName, string message)
+        {
+            try
+            {
+                WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
+
+                // Focus the search bar
+                IWebElement searchBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id='app']/div/div[2]/div[2]/div[1]/span/div/span/div/div/div/div[1]/div/div/div[2]/div[2]/div/div[1]/p")));
+                searchBox.Click();
+                searchBox.Clear();
+                searchBox.SendKeys(channelName);
+                Thread.Sleep(2000); // Allow time for the search results to appear
+
+                // Select the channel from the search results
+                IWebElement channel = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id='app']/div/div[2]/div[2]/div[1]/span/div/span/div/div/div/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[2]/span")));
+                channel.Click();
+                Thread.Sleep(3000); // Wait for the channel to open
+
+                // Find the message input box and type the message
+                IWebElement content = driver.SwitchTo().ActiveElement();
+                content.SendKeys(message);
+                Thread.Sleep(5000);
+                content.SendKeys(Keys.Return);
+                Thread.Sleep(1000); // Ensure message is sent
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error occurred: {e.Message}");
+            }
+        }
+
     }
 }
