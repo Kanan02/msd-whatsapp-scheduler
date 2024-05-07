@@ -1,8 +1,7 @@
 ﻿using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium;
 using System;
-using System.Collections.Generic;
-
+using OpenQA.Selenium.Firefox;
 using System.Threading.Tasks;
 using System.Windows;
 using msd_whatsapp_scheduler.Models;
@@ -32,10 +31,12 @@ namespace msd_whatsapp_scheduler
             DataContext = this;
             txtYouTubeURL.TextChanged += UpdateMessagePreview;
             txtRBTCode.TextChanged += UpdateMessagePreview;
+            txtTitle.TextChanged += UpdateMessagePreview;
         }
 
         private void InitializeWebDriver()
         {
+            //driver = new FirefoxDriver();
             driver = new ChromeDriver();
             driver.Navigate().GoToUrl("https://web.whatsapp.com");
             channelName.Text = "TestChannel";
@@ -63,9 +64,12 @@ namespace msd_whatsapp_scheduler
         private void UpdateMessagePreview(object sender, EventArgs e)
         {
             // Constructing the message
-            string youtubeUrl = txtYouTubeURL.Text;
-            string rbtCode = txtRBTCode.Text;
-            txtPreview.Text = $"Check out this video! {youtubeUrl} Use this RBT code: {rbtCode}";
+            //txtPreview.Text = $"{txtYouTubeURL.Text} {txtTitle.Text} Fraqmenti yükləmək üçün {txtRBTCode.Text}" +
+            //    $" kodu 6900-a göndər! (6900-a (6070-ə) göndərilən kodlara görə ilk sifarişin qiyməti 30 gün üçün" +
+            //    $" 1.8 manat təşkil edir. Cari balans 1.8 manatdan azdırsa, günə 6 qəpik hesabı ilə hesablanır (məsələn," +
+            //    $" 1 gün üçün 6 qəpik, 10 gün üçün 60 qəpik, 20 gün üçün 1.2 manat çıxılır)." +
+            //    $" Abunə olunan müddət ərzində ZengimCELL-in dəyişdirilməsi pulsuz və limitsizdir.)";
+            txtPreview.Text = $"{txtYouTubeURL.Text} {txtTitle.Text} Fraqmenti yükləmək üçün {txtRBTCode.Text} kodu 6900 qısa nömrəyə göndərin. Əlavə məlumat üçün müştəri xidmətləri: 6055 (ilk 1 dəqiqə pulsuz, növbəti dəqiqələrdən 2 qəp/dəq), *6070.";
         }
 
         private void btnSchedule_Click(object sender, RoutedEventArgs e)
@@ -180,14 +184,15 @@ namespace msd_whatsapp_scheduler
             try
             {
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
-
+                // firefox xPath /html/body/div[1]/div/div/div[2]/div[2]/div[1]/span/div/span/div/div/div/div[1]/div/div/div[2]/div[2]/div/div[1]/p
                 // Focus the search bar
                 IWebElement searchBox = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id='app']/div/div[2]/div[2]/div[1]/span/div/span/div/div/div/div[1]/div/div/div[2]/div[2]/div/div[1]/p")));
                 searchBox.Click();
                 searchBox.Clear();
                 searchBox.SendKeys(channelName);
                 Thread.Sleep(2000); // Allow time for the search results to appear
-
+                // firefox xPath channel textbox
+                // /html/body/div[1]/div/div/div[2]/div[4]/div/footer/div[1]/div/span[2]/div/div[2]/div[1]/div/div[1]/p
                 // Select the channel from the search results
                 IWebElement channel = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@id='app']/div/div[2]/div[2]/div[1]/span/div/span/div/div/div/div[2]/div[1]/div/div/div/div/div/div/div[1]/div[2]/span")));
                 channel.Click();
